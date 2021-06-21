@@ -1,0 +1,22 @@
+---
+- name: crowdstrike
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: install crowdstrike
+      shell: sudo yum install -y falcon-sensor.rpm
+      register: op
+    - name: debug op
+      debug:
+        var: op
+    - name: check for falcon sensor 
+      service:	
+        name: falcon-sensor
+    	state: present
+      notify:
+        stop falcon-sensor
+  handlers:
+    - name: stop falcon-sensor
+      service: 
+        name: falcon-sensor
+        state: stop
